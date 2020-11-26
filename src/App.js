@@ -59,6 +59,11 @@ class App extends Component {
     console.log("state  sua khi chen :" ,this.state)
     localStorage.setItem('patient', JSON.stringify(patient));
   }
+
+  onUpdateStatus(){
+
+  }
+  
   render() {
     
     return (
@@ -93,7 +98,10 @@ class App extends Component {
                  <AppointmentList sentData={this.onSubmit} />
               </Route>
               <Route path="/makeAnAppointment">
-                 <MakeAnAppointment sentDataAfter={this.state.patient} />
+                 <MakeAnAppointment 
+                 sentDataAfter={this.state.patient} 
+                 onUpdateStatus={this.onUpdateStatus}
+                 />
               </Route>
               <Route path='/searchByPhoneNumber' component={ SearchByPhoneNumber } />
               <Route path='/timeTableDoctor' component={ TimeTableDoctor } />

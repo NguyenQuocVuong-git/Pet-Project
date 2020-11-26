@@ -18,7 +18,10 @@ export default class AppointmentList extends Component {
             gender : "",
             phone : "",
             detail :"",
-            date : ""
+            date : "",
+            messSucces : false,
+            messFail : false,
+            messLoading : false
         }
     }
 
@@ -66,33 +69,73 @@ export default class AppointmentList extends Component {
 
     onSubmit = (e) => {
          e.preventDefault();
-        const object = {
-            name : this.state.name,
-            age : this.state.age,
-            gender : this.state.gender,
-            phone : this.state.phone,
-            detail : this.state.detail,
-            date : this.state.date
+        const dateInput = this.state.date;
+        const dateDoctor = localStorage.getItem('date');
+        const statusDoctor = localStorage.getItem('status');
+        if(dateInput === dateDoctor && statusDoctor === "ban" ){
+            this.setState({
+                messFail : true
+            })
+        }else if(dateInput === dateDoctor && statusDoctor === "cotheranh") {
+            const object = {
+                name : this.state.name,
+                age : this.state.age,
+                gender : this.state.gender,
+                phone : this.state.phone,
+                detail : this.state.detail,
+                date : this.state.date,
+                status : "choxuly"
+            }
+            console.log(object);
+            console.log("co the ranh");
+            this.props.sentData(object);
+            this.setState({
+                messLoading : true,
+                name : "",
+                age : "",
+                gender : "",
+                phone : "",
+                detail :"",
+                date : "",
+            })
+        }else{
+            const object = {
+                name : this.state.name,
+                age : this.state.age,
+                gender : this.state.gender,
+                phone : this.state.phone,
+                detail : this.state.detail,
+                date : this.state.date,
+                status : "thanhcong"
+            }
+            this.props.sentData(object);
+            this.setState({
+                name : "",
+                age : "",
+                gender : "",
+                phone : "",
+                detail :"",
+                date : "",
+                messSucces : true,
+                messFail : false
+            })
+
         }
-        
-        console.log(object);
-
-        this.props.sentData(object);
-
-        this.setState({
-            name : "",
-            age : "",
-            gender : "",
-            phone : "",
-            detail :"",
-            date : ""
-        })
+      
        
     }
 
     render() {
+        var { messSucces , messFail , messLoading} = this.state;
+        var messNotificationSucces = messSucces ? "Đặt lịch hẹn thành công " : "";
+        var messNotificationFail = messFail ? " Bác Sĩ Bận , vui lòng đặt lại ngày khác" : "";
+        var messNotificationLoading = messLoading ? " Lịch hẹn đang chờ xử lý" : "";
         return (
+         
             <div style={{marginTop: 10}}>
+                    {messNotificationSucces}
+                    {messNotificationFail}
+                    {messNotificationLoading}
                 <h3>Đặt lịch hẹn</h3>
                 <form  onSubmit={this.onSubmit}>
                     <div className="form-group">

@@ -7,10 +7,8 @@ import TableRow from './TableRow';
 export default class SearchByPhoneNumber extends Component {
     constructor(props){
         super(props);
-
         this.onChangePhone = this.onChangePhone.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-
         this.state = {
             search : [],
             phone :"",
@@ -20,24 +18,33 @@ export default class SearchByPhoneNumber extends Component {
 
         
     }
+    componentDidMount(){
+        console.log("didmount", JSON.parse(localStorage.getItem('result')));
+    }
+
 
     findArrayElementByTitle(array, title) {
-        return array.find((element) => {
-            if(element.phone === title) {
-                var elementRusult = element;
-                console.log(elementRusult);
-                console.log("state sau khi get :", this.state);
-                this.setState({
-                    search : elementRusult,
-                    isDisplayForm : true
-                })
-            }else {
-                this.setState({
-                    mess : true
-                })
-            }       
-        })
-      }
+        const result = array.filter((item) => item.phone === title);
+         if(result.length === 0){
+            this.setState({
+                mess : true
+            })
+         }else{
+             this.setState({
+                 search : result,
+                 isDisplayForm : true
+             })
+            //  localStorage.setItem('result', JSON.stringify(result));
+            //  console.log("elseeeeeee",this.state.search)
+            //  console.log('result',localStorage.getItem('result'));
+         }
+    }
+
+      tabRow() {
+        return this.state.search.map(function (object, i) {
+            return <TableRow obj={object} key={i}/>;
+        });
+    }
 
     onChangePhone(e) {
         this.setState({
@@ -46,17 +53,9 @@ export default class SearchByPhoneNumber extends Component {
     }
     onSubmit(e){
         e.preventDefault();
-        
         var valueSearch = this.state.phone;
-        console.log(valueSearch);
         var tasks = JSON.parse(localStorage.getItem('patient'));
         this.findArrayElementByTitle(tasks,valueSearch);
-    }
-
-    onToggleForm = () => {
-        this.setState({
-            isDisplayForm : !this.state.isDisplayForm
-        })
     }
 
     
@@ -77,45 +76,24 @@ export default class SearchByPhoneNumber extends Component {
                 </tr>
             </thead>
             <tbody>
-                <td>
-                    {this.state.search.name}
-                </td>
-                <td>
-                    {this.state.search.age}
-                </td>
-                <td>
-                    {this.state.search.gender}
-                </td>
-                <td>
-                    {this.state.search.phone}
-                </td>
-                <td>
-                    {this.state.search.date}
-                </td>
-                <td>
-                    {this.state.search.detail}
-                </td>
-                <td></td>
+                  {this.tabRow()}
             </tbody>
             </table> 
         : "" ;
         
         return (
-            <div>
-                
+            <div>               
                 <form  onSubmit={this.onSubmit}>
-
                     <div className="form-group">
                         <label>Nhập số điện thoại muốn tìm kiếm </label>
                         <input type="text"
                         name = "phone"
                         value={this.state.phone}
                         onChange={this.onChangePhone}
-                        className="form-control"
-                        
+                        className="form-control"  
                         />
                     </div>
-                    <div className="form-group" onClick={this.onToggleForm} >
+                    <div className="form-group" >
                         <input type="submit" value="Submit" className="btn btn-primary" />
                     </div>
                   {elm}

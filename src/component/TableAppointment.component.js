@@ -3,34 +3,27 @@ import React, {Component} from 'react';
 class TableRow extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            cancel : false,
-            success : false,
-            loading : false
-        }
+        
 
         this.onChangeStatus = this.onChangeStatus.bind(this);
-        
     }
 
 
     onChangeStatus(event){
         console.log(this.state);
-        this.setState({value: event.target.value});
+        console.log(this.props.obj);
+        console.log(this.props.key);
+        // this.setState({value: event.target.value});
+        this.props.onUpdateStatus(this.props.index, event.target.value);
     }
 
-    change(){
-        if(this.props.value === "huy"){
-            return <td> Hủy</td>
-        }
-    }
     render(){
-        var cancel = this.props.value;
-        if( cancel ==="huy"){
-            var messCancel = " Hủy " ;
-        }
+        var { key } = this.props;
         return(
             <tr>
+                <td>
+                    {key}
+                </td>
                <td>
                     {this.props.obj.name}
                 </td>
@@ -49,8 +42,8 @@ class TableRow extends Component {
                 <td>
                     {this.props.obj.detail}
                 </td>
-                <td> 
-                    <select  value={this.props.obj.status} disabled="true">                
+                <td>
+                    <select  value={this.props.obj.status} onChange={this.onChangeStatus}>  
                                     <option value="thanhcong">Đặt thành công</option>
                                     <option value="choxuly">Đang chờ xử lý</option>
                                     <option value="huy">Hủy</option>
